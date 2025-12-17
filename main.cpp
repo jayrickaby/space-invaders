@@ -9,16 +9,20 @@
 int main() {
     sf::RenderWindow window(sf::VideoMode({1024,1024}), "Interstellar Colonisers");
     sf::View camera(sf::FloatRect({0.f, 0.f}, {128,128}));
+    bool isPaused = false;
 
+    // Music
     sf::Music mus_mars("assets/music/mus_mars.ogg");
     mus_mars.setLooping(true);
     mus_mars.play();
 
+    // Game Objects
     Player player({56.f, 112.f});
     std::vector<std::unique_ptr<Enemy>> enemyList;
     float enemyCooldown{1};
     float enemyTimer{0};
 
+    // Background
     sf::Texture tex_background("assets/sprites/spr_background.png");
     sf::Sprite spr_background(tex_background);
 
@@ -44,16 +48,15 @@ int main() {
             if (event->is<sf::Event::Closed>()){
                 window.close();
             }
+
+            if (const auto* keyPress = event->getIf<sf::Event::KeyPressed>()) {
+                if (keyPress->code == sf::Keyboard::Key::Escape) {
+                    isPaused = !isPaused;
+                }
+            }
         }
 
         float deltaTime = clock.restart().asSeconds();
-
-        enemyTimer += deltaTime;
-        if (enemyTimer >= enemyCooldown){
-            enemyTimer = 0;
-            float enemyX = (rand() % 96) + 16;
-            enemyList.push_back(std::make_unique<Enemy>(sf::Vector2f{enemyX, -16.f}));
-        }
 
         // Configure render targets
         window.setView(camera);
@@ -61,29 +64,45 @@ int main() {
         // Clear Screen
         window.clear();
 
-        // Update stuff
-        player.update(deltaTime);
-
-        for (auto& enemy : enemyList){
-            enemy->update(deltaTime);
-        }
-
-        player.updateBullets(deltaTime, enemyList);
-
-        for (auto& enemy : enemyList){
-            if (enemy->getNeedsDestroyingState()){
-                points += 1;
-                pointsText.setString("Points: " + std::to_string(points));
+        // Game Logic
+        if (!isPaused){
+            enemyTimer += deltaTime;
+            if (enemyTimer >= enemyCooldown){
+                enemyTimer = 0;
+                float enemyX = (rand() % 96) + 16;
+                enemyList.push_back(std::make_unique<Enemy>(sf::Vector2f{enemyX, -16.f}));
             }
+
+            // Update stuff
+            player.update(deltaTime);
+
+            for (auto& enemy : enemyList){
+                enemy->update(deltaTime);
+            }
+
+            player.updateBullets(deltaTime, enemyList);
+
+            for (auto& enemy : enemyList){
+                if (enemy->getNeedsDestroyingState()){
+                    points += 1;
+                    pointsText.setString("Points: " + std::to_string(points));
+                }
+            }
+
+            enemyList.erase(
+                std::remove_if(enemyList.begin(), enemyList.end(),
+                            [](const std::unique_ptr<Enemy>& enemy) {
+                                return enemy->getNeedsDestroyingState();
+                            }),
+                            enemyList.end()
+            );
+            if (mus_mars.getStatus() == sf::Music::Status::Paused) {
+                mus_mars.play();
+            }
+        } else {
+            mus_mars.pause();
         }
 
-        enemyList.erase(
-            std::remove_if(enemyList.begin(), enemyList.end(),
-                           [](const std::unique_ptr<Enemy>& enemy) {
-                               return enemy->getNeedsDestroyingState();
-                           }),
-                         enemyList.end()
-        );
 
         // Draw stuff to rendertargets
         window.draw(spr_background);
