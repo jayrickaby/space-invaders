@@ -14,7 +14,7 @@ speed(speed),
 direction(direction),
 velocity({0.f,0.f}),
 collisionBox(sf::FloatRect(startPosition, {16.f, 16.f})),
-texture("assets/sprites/spritesheet.png"),
+texture("assets/sprites/spr_sheet.png"),
 sprite(texture),
 needsDestroyingState(false)
 
