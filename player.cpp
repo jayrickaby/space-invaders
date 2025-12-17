@@ -2,15 +2,16 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include "enemy.h"
 #include "player.h"
 
 Player::Player(sf::Vector2f startPosition):
-speed(50),
-velocity({0,0}),
+speed(50.f),
+velocity({0.f,0.f}),
 collisionBox(sf::FloatRect(startPosition, {16.f, 16.f})),
 texture("assets/sprites/spritesheet.png"),
 sprite(texture),
-bulletRecharge(1),
+bulletRecharge(1.f),
 bulletTimer(bulletRecharge)
 {
     sf::IntRect spriteRect({0,0}, {16,16});
@@ -42,7 +43,7 @@ void Player::update(float deltaTime){
     }
 
     if (direction.y == 0){
-        // Expoential decay
+        // Exponential decay
         velocity.y *= exp(-dampening * deltaTime);
     }
     else {
@@ -61,8 +62,20 @@ void Player::update(float deltaTime){
         Player::shoot();
         bulletTimer = 0;
     }
+}
+
+void Player::updateBullets(float deltaTime, std::vector<std::unique_ptr<Enemy>>& enemies){
     for (auto& bullet : bulletList){
         bullet->update(deltaTime);
+
+        for (auto& enemy : enemies){
+            if (enemy->getCollisionBox().findIntersection(bullet->getCollisionBox())){
+                bullet->setNeedsDestroyingState(true);
+                enemy->setNeedsDestroyingState(true);
+                break;
+            }
+        }
+
     }
 
     bulletList.erase(
@@ -70,7 +83,7 @@ void Player::update(float deltaTime){
                        [](const std::unique_ptr<Projectile>& bullet) {
                            return bullet->getNeedsDestroyingState();
                        }),
-                     bulletList.end()
+        bulletList.end()
     );
 }
 

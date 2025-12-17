@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "enemy.h"
 #include "projectile.h"
 
 class Player{
@@ -7,6 +8,7 @@ public:
     // Core methods
     Player(sf::Vector2f startPosition);
     void update(float deltaTime);
+    void updateBullets(float deltaTime, std::vector<std::unique_ptr<Enemy>>& enemies);
     void draw(sf::RenderTarget& target) const;
 
 private:

@@ -1,17 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "enemy.h"
 
-class Projectile{
+class Enemy {
 public:
     // Core methods
-    Projectile(sf::Vector2f startPosition);
+    Enemy(sf::Vector2f startPosition);
     void update(float deltaTime);
     void draw(sf::RenderTarget& target) const;
 
-    // Getters
-    sf::Vector2f getPosition();
-    sf::Vector2f getSize();
+    // Getter
     sf::FloatRect getCollisionBox();
     bool getNeedsDestroyingState();
 

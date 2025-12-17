@@ -4,7 +4,7 @@ project(invaders-for-henry)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(invaders-for-henry main.cpp player.cpp projectile.cpp)
+add_executable(invaders-for-henry main.cpp enemy.cpp player.cpp projectile.cpp)
 
 find_package(SFML 3.0 COMPONENTS Graphics Audio REQUIRED)
 

@@ -2,9 +2,9 @@
 #include "projectile.h"
 
 Projectile::Projectile(sf::Vector2f startPosition):
-speed(100),
+speed(100.f),
 direction({0,-1}),
-velocity({0,0}),
+velocity({0.f,0.f}),
 collisionBox(sf::FloatRect(startPosition, {16.f, 16.f})),
 texture("assets/sprites/spritesheet.png"),
 sprite(texture),
@@ -53,4 +53,8 @@ bool Projectile::getNeedsDestroyingState(){
 void Projectile::setNeedsDestroyingState(bool state) {
     needsDestroyingState = state;
 }
+sf::FloatRect Projectile::getCollisionBox() {
+    return collisionBox;
+}
+
 
