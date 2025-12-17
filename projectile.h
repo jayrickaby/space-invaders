@@ -7,11 +7,14 @@ public:
     Projectile(sf::Vector2f startPosition);
     void update(float deltaTime);
     void draw(sf::RenderTarget& target) const;
-   //~Projectile();
 
-    // Getter
+    // Getters
     sf::Vector2f getPosition();
     sf::Vector2f getSize();
+    bool getNeedsDestroyingState();
+
+    // Setters
+    void setNeedsDestroyingState(bool state);
 
 private:
     // Physics stuffs
@@ -24,6 +27,9 @@ private:
     // Visual stuff
     sf::Texture texture;
     sf::Sprite sprite;
+
+    // Gameplay
+    bool needsDestroyingState;
 
     // Core methods
     void move(float deltaTime);

@@ -7,7 +7,8 @@ direction({0,-1}),
 velocity({0,0}),
 collisionBox(sf::FloatRect(startPosition, {16.f, 16.f})),
 texture("assets/sprites/spritesheet.png"),
-sprite(texture)
+sprite(texture),
+needsDestroyingState(false)
 {
     sf::IntRect spriteRect({16,0}, {16,16});
     sprite.setTextureRect(spriteRect);
@@ -21,6 +22,10 @@ void Projectile::update(float deltaTime){
 
     position = collisionBox.position;
     sprite.setPosition(position);
+
+    if (position.y < 0 - collisionBox.size.y){
+        needsDestroyingState = true;
+    }
 }
 
 void Projectile::move(float deltaTime) {
@@ -39,5 +44,13 @@ sf::Vector2f Projectile::getPosition(){
 
 sf::Vector2f Projectile::getSize() {
     return collisionBox.size;
+}
+
+bool Projectile::getNeedsDestroyingState(){
+    return needsDestroyingState;
+}
+
+void Projectile::setNeedsDestroyingState(bool state) {
+    needsDestroyingState = state;
 }
 

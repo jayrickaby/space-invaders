@@ -68,7 +68,7 @@ void Player::update(float deltaTime){
     bulletList.erase(
         std::remove_if(bulletList.begin(), bulletList.end(),
                        [](const std::unique_ptr<Projectile>& bullet) {
-                           return bullet->getPosition().y < 0 - bullet->getSize().y;  // or whatever your off-screen condition is
+                           return bullet->getNeedsDestroyingState();
                        }),
                      bulletList.end()
     );
