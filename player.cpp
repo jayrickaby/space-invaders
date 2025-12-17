@@ -1,42 +1,94 @@
 #include <SFML/Graphics.hpp>
+#include <algorithm>
+#include <cmath>
+#include <iostream>
 #include "player.h"
 
 Player::Player(sf::Vector2f startPosition):
 speed(50),
-bulletRecharge(2),
 velocity({0,0}),
+collisionBox(sf::FloatRect(startPosition, {16.f, 16.f})),
 texture("assets/sprites/spritesheet.png"),
-sprite(texture)
+sprite(texture),
+bulletRecharge(1),
+bulletTimer(bulletRecharge)
 {
-    collisionBox.position = startPosition;
     sf::IntRect spriteRect({0,0}, {16,16});
     sprite.setTextureRect(spriteRect);
 }
 
 void Player::handleInput() {
+    isShooting = false;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+        isShooting = true;
+    }
+
     direction.x = (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) - (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A));
     direction.y = (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) - (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W));
 }
 
 
 void Player::update(float deltaTime){
+    // Movement
     handleInput();
-    velocity.x = speed * direction.x;
-    velocity.y = speed * direction.y;
+    float dampening = 7.5f;
+
+    if (direction.x == 0){
+        // Exponential decay
+        velocity.x *= exp(-dampening * deltaTime);
+    }
+    else {
+        velocity.x = speed * direction.x;
+    }
+
+    if (direction.y == 0){
+        // Expoential decay
+        velocity.y *= exp(-dampening * deltaTime);
+    }
+    else {
+        velocity.y = speed * direction.y;
+    }
 
     move(deltaTime);
 
+    // Updating from movement
     position = collisionBox.position;
     sprite.setPosition(position);
+
+    // Bullet stuff
+    bulletTimer += deltaTime;
+    if (isShooting && bulletTimer > bulletRecharge){
+        Player::shoot();
+        bulletTimer = 0;
+    }
+    for (auto& bullet : bulletList){
+        bullet->update(deltaTime);
+    }
+
+    bulletList.erase(
+        std::remove_if(bulletList.begin(), bulletList.end(),
+                       [](const std::unique_ptr<Projectile>& bullet) {
+                           return bullet->getPosition().y < 0 - bullet->getSize().y;  // or whatever your off-screen condition is
+                       }),
+                     bulletList.end()
+    );
 }
 
 void Player::move(float deltaTime) {
-    collisionBox.position.x += velocity.x * deltaTime;
-    collisionBox.position.y += velocity.y * deltaTime;
+    collisionBox.position += sf::Vector2f({velocity.x * deltaTime, velocity.y * deltaTime});
 }
 
 
-void Player::render(sf::RenderTarget& target) const {
+void Player::draw(sf::RenderTarget& target) const {
     target.draw(sprite);
+
+    for (auto& bullet : bulletList){
+        bullet->draw(target);
+    }
 }
+
+void Player::shoot() {
+    bulletList.push_back(std::make_unique<Projectile>(position));
+}
+
 

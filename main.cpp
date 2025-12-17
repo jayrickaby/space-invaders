@@ -25,7 +25,7 @@ int main() {
 
         player.update(deltaTime);
 
-        player.render(window);
+        player.draw(window);
 
         // Finalise and update the screen!
         window.display();

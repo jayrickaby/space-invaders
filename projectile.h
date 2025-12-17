@@ -1,13 +1,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "projectile.h"
 
-class Player{
+class Projectile{
 public:
     // Core methods
-    Player(sf::Vector2f startPosition);
+    Projectile(sf::Vector2f startPosition);
     void update(float deltaTime);
     void draw(sf::RenderTarget& target) const;
+   //~Projectile();
+
+    // Getter
+    sf::Vector2f getPosition();
+    sf::Vector2f getSize();
 
 private:
     // Physics stuffs
@@ -21,14 +25,6 @@ private:
     sf::Texture texture;
     sf::Sprite sprite;
 
-    // Gameplay stuff
-    bool isShooting;
-    float bulletRecharge;
-    float bulletTimer;
-    std::vector<std::unique_ptr<Projectile>> bulletList;
-
     // Core methods
-    void handleInput();
     void move(float deltaTime);
-    void shoot();
 };
