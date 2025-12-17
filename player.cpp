@@ -6,7 +6,7 @@
 
 Player::Player(sf::Vector2f startPosition):
 Entity(startPosition, (50.f)),
-bulletRecharge(1.f),
+bulletRecharge(0.75f),
 bulletTimer(bulletRecharge)
 {
     sf::IntRect spriteRect({0,0}, {16,16});
