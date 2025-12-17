@@ -57,3 +57,4 @@ build/
 
 # SyncThing
 .stfolder/
+*.sync-conflict*
