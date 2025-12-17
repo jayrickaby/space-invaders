@@ -1,28 +1,18 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "entity.h"
 #include "enemy.h"
 #include "projectile.h"
 
-class Player{
+class Player : public Entity{
 public:
     // Core methods
     Player(sf::Vector2f startPosition);
-    void update(float deltaTime);
+    void update(float deltaTime) override;
     void updateBullets(float deltaTime, std::vector<std::unique_ptr<Enemy>>& enemies);
-    void draw(sf::RenderTarget& target) const;
+    void draw(sf::RenderTarget & target) const override;
 
 private:
-    // Physics stuffs
-    float speed;
-    sf::Vector2i direction;
-    sf::Vector2f position;
-    sf::Vector2f velocity;
-    sf::FloatRect collisionBox;
-
-    // Visual stuff
-    sf::Texture texture;
-    sf::Sprite sprite;
-
     // Gameplay stuff
     bool isShooting;
     float bulletRecharge;
@@ -31,6 +21,5 @@ private:
 
     // Core methods
     void handleInput();
-    void move(float deltaTime);
     void shoot();
 };

@@ -1,16 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <algorithm>
-#include <cmath>
-#include <iostream>
+#include "entity.h"
 #include "enemy.h"
 #include "player.h"
 
 Player::Player(sf::Vector2f startPosition):
-speed(50.f),
-velocity({0.f,0.f}),
-collisionBox(sf::FloatRect(startPosition, {16.f, 16.f})),
-texture("assets/sprites/spritesheet.png"),
-sprite(texture),
+Entity(startPosition, (50.f)),
 bulletRecharge(1.f),
 bulletTimer(bulletRecharge)
 {
@@ -32,29 +27,7 @@ void Player::handleInput() {
 void Player::update(float deltaTime){
     // Movement
     handleInput();
-    float dampening = 7.5f;
-
-    if (direction.x == 0){
-        // Exponential decay
-        velocity.x *= exp(-dampening * deltaTime);
-    }
-    else {
-        velocity.x = speed * direction.x;
-    }
-
-    if (direction.y == 0){
-        // Exponential decay
-        velocity.y *= exp(-dampening * deltaTime);
-    }
-    else {
-        velocity.y = speed * direction.y;
-    }
-
-    move(deltaTime);
-
-    // Updating from movement
-    position = collisionBox.position;
-    sprite.setPosition(position);
+    Entity::update(deltaTime);
 
     // Bullet stuff
     bulletTimer += deltaTime;
@@ -87,13 +60,8 @@ void Player::updateBullets(float deltaTime, std::vector<std::unique_ptr<Enemy>>&
     );
 }
 
-void Player::move(float deltaTime) {
-    collisionBox.position += sf::Vector2f({velocity.x * deltaTime, velocity.y * deltaTime});
-}
-
-
 void Player::draw(sf::RenderTarget& target) const {
-    target.draw(sprite);
+    Entity::draw(target);
 
     for (auto& bullet : bulletList){
         bullet->draw(target);
