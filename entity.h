@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+// Copyright (c) 2025 Jay Rickaby
+
 class Entity {
 public:
     // Core methods

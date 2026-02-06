@@ -5,6 +5,8 @@
 #include "enemy.h"
 #include "player.h"
 
+// Copyright (c) 2025 Jay Rickaby
+
 Player::Player(sf::Vector2f startPosition):
 Entity(startPosition, (50.f)),
 bulletRecharge(0.75f),

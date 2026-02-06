@@ -5,6 +5,8 @@
 #include "enemy.h"
 #include "projectile.h"
 
+// Copyright (c) 2025 Jay Rickaby
+
 class Player : public Entity{
 public:
     // Core methods

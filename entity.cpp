@@ -3,6 +3,8 @@
 #include <cmath>
 #include "entity.h"
 
+// Copyright (c) 2025 Jay Rickaby
+
 Entity::Entity(sf::Vector2f startPosition, float speed):
 Entity(startPosition, speed, {0,0})
 {

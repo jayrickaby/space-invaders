@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "projectile.h"
 
+// Copyright (c) 2025 Jay Rickaby
+
 Projectile::Projectile(sf::Vector2f startPosition):
 Entity(startPosition, 100.f, {0, -1})
 {

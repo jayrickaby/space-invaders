@@ -6,6 +6,8 @@
 #include "enemy.h"
 #include "player.h"
 
+// Copyright (c) 2025 Jay Rickaby
+
 int main() {
     sf::RenderWindow window(sf::VideoMode({1024,1024}), "Interstellar Colonisers");
     sf::View camera(sf::FloatRect({0.f, 0.f}, {128,128}));

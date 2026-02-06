@@ -2,6 +2,8 @@
 #include "entity.h"
 #include "enemy.h"
 
+// Copyright (c) 2025 Jay Rickaby
+
 Enemy::Enemy(sf::Vector2f startPosition):
 Entity(startPosition, 10.f, {0,1})
 {
