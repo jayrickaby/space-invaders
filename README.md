@@ -13,13 +13,13 @@ Some challenges I faced:
 
 ## Features
 - A player-controllable character that can shoot projectiles.
+- Pressing "ESC" pauses the game, and "M" mutes the music.
 - Oncoming swarm of aliens descending from the top.
 - A points system to track how many aliens you killed.
 - Music and SFX that play.
 
 ## Gallery
-<img src="https://github.com/user-attachments/assets/a367b9d2-855c-4a96-a51c-701566beac77" width="320" />
-
+https://github.com/user-attachments/assets/8f808495-3c0e-4b0e-83e9-a6ad571724e2
 
 ## Build & Run
 ```bash
