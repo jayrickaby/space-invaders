@@ -10,11 +10,19 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({1024,1024}), "Interstellar Colonisers");
     sf::View camera(sf::FloatRect({0.f, 0.f}, {128,128}));
     bool isPaused = false;
+    bool muteMusic = false;
 
     // Music
+    //sf::Music mus_mars("assets/music/mus_rocketman.mp3");
     sf::Music mus_mars("assets/music/mus_mars.ogg");
     mus_mars.setLooping(true);
     mus_mars.play();
+
+
+    // Engine Noise
+    sf::Music snd_engine("assets/sounds/snd_engine.wav");
+    snd_engine.setLooping(true);
+    snd_engine.play();
 
     // Game Objects
     Player player({56.f, 112.f});
@@ -39,6 +47,11 @@ int main() {
         window.getDefaultView().getSize().y - pointsText.getCharacterSize() - pointsText.getOutlineThickness()});
     std::cout << pointsText.getPosition().x << '\n';
 
+    sf::Text muteText = pointsText;
+    muteText.setPosition({0 + pointsText.getOutlineThickness(),
+        0 + pointsText.getOutlineThickness()});
+    muteText.setString("Muted");
+
     int points{0};
 
     sf::Clock clock;
@@ -52,6 +65,9 @@ int main() {
             if (const auto* keyPress = event->getIf<sf::Event::KeyPressed>()) {
                 if (keyPress->code == sf::Keyboard::Key::Escape) {
                     isPaused = !isPaused;
+                }
+                else if (keyPress-> code == sf::Keyboard::Key::M){
+                    muteMusic = !muteMusic;
                 }
             }
         }
@@ -99,8 +115,21 @@ int main() {
             if (mus_mars.getStatus() == sf::Music::Status::Paused) {
                 mus_mars.play();
             }
+
+            if (snd_engine.getStatus() == sf::Music::Status::Paused) {
+                snd_engine.play();
+            }
+            if (player.getDirection() == sf::Vector2i{0,0}){
+                snd_engine.setVolume(0);
+            }
+            else {
+                snd_engine.setVolume(50);
+            }
+            mus_mars.setVolume(100 * !muteMusic);
+
         } else {
             mus_mars.pause();
+            snd_engine.pause();
         }
 
 
@@ -114,6 +143,9 @@ int main() {
         // draw ui
         window.setView(window.getDefaultView());
         window.draw(pointsText);
+        if (muteMusic){
+            window.draw(muteText);
+        }
 
         // Finalise and update the screen!
         window.display();

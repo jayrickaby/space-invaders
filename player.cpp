@@ -1,3 +1,4 @@
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include "entity.h"
@@ -7,10 +8,17 @@
 Player::Player(sf::Vector2f startPosition):
 Entity(startPosition, (50.f)),
 bulletRecharge(0.75f),
-bulletTimer(bulletRecharge)
+bulletTimer(bulletRecharge),
+buf_shoot("assets/sounds/snd_shoot.wav"),
+buf_explosion("assets/sounds/snd_explosion.wav"),
+snd_shoot(buf_shoot),
+snd_explosion(buf_explosion)
 {
     sf::IntRect spriteRect({0,0}, {16,16});
     sprite.setTextureRect(spriteRect);
+
+    snd_shoot.setVolume(50);
+    snd_explosion.setVolume(50);
 }
 
 void Player::handleInput() {
@@ -45,6 +53,7 @@ void Player::updateBullets(float deltaTime, std::vector<std::unique_ptr<Enemy>>&
             if (enemy->getCollisionBox().findIntersection(bullet->getCollisionBox())){
                 bullet->setNeedsDestroyingState(true);
                 enemy->setNeedsDestroyingState(true);
+                snd_explosion.play();
                 break;
             }
         }
@@ -70,6 +79,7 @@ void Player::draw(sf::RenderTarget& target) const {
 
 void Player::shoot() {
     bulletList.push_back(std::make_unique<Projectile>(position));
+    snd_shoot.play();
 }
 
 

@@ -11,7 +11,9 @@ public:
     virtual ~Entity() = default;
 
     // Getter
+    sf::Vector2i getDirection() { return direction;} const
     sf::Vector2f getPosition() { return collisionBox.position; } const
+    sf::Vector2f getVelocity() { return velocity; } const
     sf::Vector2f getSize() { return collisionBox.size; } const
     sf::FloatRect getCollisionBox() { return collisionBox; } const
     bool getNeedsDestroyingState() { return needsDestroyingState; } const

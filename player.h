@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "entity.h"
 #include "enemy.h"
@@ -18,6 +19,12 @@ private:
     float bulletRecharge;
     float bulletTimer;
     std::vector<std::unique_ptr<Projectile>> bulletList;
+
+    // Sound stuff
+    sf::SoundBuffer buf_shoot;
+    sf::SoundBuffer buf_explosion;
+    sf::Sound snd_shoot;
+    sf::Sound snd_explosion;
 
     // Core methods
     void handleInput();
